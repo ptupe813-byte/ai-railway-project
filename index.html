@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart AI Railway Reservation System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <section id="login-section">
+            <h1>Smart AI Railway Reservation System</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+                <button type="button" id="register-btn">Register</button>
+            </form>
+            <button id="face-verify">Face Recognition Login</button>
+            <p id="face-status"></p>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-section" class="hidden">
+            <h2>Welcome to Dashboard</h2>
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Available Trains</h3>
+                    <div id="train-list" class="train-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Section -->
+        <section id="booking-section" class="hidden">
+            <h2>Book Your Ticket</h2>
+            <div class="card">
+                <div id="train-info"></div>
+                <form id="booking-form" class="booking-form">
+                    <div class="form-group">
+                        <label for="class">Class:</label>
+                        <select id="class" required>
+                            <option value="Sleeper">Sleeper</option>
+                            <option value="3A">3A</option>
+                            <option value="2A">2A</option>
+                            <option value="1A">1A</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="seat-type">Seat Preference:</label>
+                        <select id="seat-type">
+                            <option value="Window">Window</option>
+                            <option value="Aisle">Aisle</option>
+                            <option value="Lower">Lower Berth</option>
+                            <option value="Upper">Upper Berth</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="passengers">Number of Passengers:</label>
+                        <input type="number" id="passengers" min="1" max="6" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age:</label>
+                        <input type="number" id="age" min="1" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="special-needs"> Special Needs
+                        </label>
+                    </div>
+                    <button type="submit">Book Ticket</button>
+                    <button type="button" id="voice-booking" class="voice-btn">Voice Booking</button>
+                    <p id="voice-status"></p>
+                </form>
+            </div>
+            <button id="back-to-dashboard">Back to Dashboard</button>
+        </section>
+
+        <!-- Confirmation Section -->
+        <section id="confirmation-section" class="hidden">
+            <h2>Booking Confirmation</h2>
+            <div class="confirmation">
+                <div class="ticket-details">
+                    <h3>Ticket Details</h3>
+                    <p><strong>Train:</strong> <span id="confirmation-train"></span></p>
+                    <p><strong>Route:</strong> <span id="confirmation-route"></span></p>
+                    <p><strong>Date:</strong> <span id="confirmation-date"></span></p>
+                    <p><strong>Allocated Seat:</strong> <span id="confirmation-seat"></span></p>
+                    <p><strong>Waiting List Prediction:</strong> <span id="confirmation-prediction"></span></p>
+                    <div id="upgrade-notification" class="upgrade-notification hidden"></div>
+                </div>
+                <button id="confirm-booking">Confirm Booking</button>
+                <button id="back-to-booking">Back to Booking</button>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

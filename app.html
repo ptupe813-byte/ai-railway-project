@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart AI Railway Reservation System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin: 20px 0 15px 0;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: slideIn 0.3s ease-in;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #5a6fd8;
+        }
+        
+        .btn-secondary {
+            background: #28a745;
+        }
+        
+        .btn-secondary:hover {
+            background: #218838;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+        }
+        
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        
+        .train-card {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .train-info {
+            flex: 1;
+        }
+        
+        .train-info strong {
+            color: #667eea;
+            font-size: 18px;
+        }
+        
+        .train-info p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .ticket-details {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .ticket-details p {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-waiting {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-upgraded {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .button-group button {
+            flex: 1;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .permission-box {
+            background: #f0f8ff;
+            border: 3px solid #667eea;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .permission-box h2 {
+            margin-top: 0;
+            color: #667eea;
+        }
+        
+        .permission-box p {
+            font-size: 16px;
+            color: #333;
+            margin: 15px 0;
+        }
+        
+        .permission-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .permission-buttons button {
+            flex: 1;
+            padding: 12px;
+        }
+        
+        .voice-btn {
+            background: #ff6b6b !important;
+        }
+        
+        .voice-btn:hover {
+            background: #ff5252 !important;
+        }
+        
+        .voice-status {
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .listening {
+            background: #ffe5e5;
+            color: #ff0000;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        .voice-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .voice-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Section -->
+        <div id="login" class="section active">
+            <h1>🚆 AI Railway System</h1>
+            <p class="subtitle">Smart Seat Allocation & Booking</p>
+            
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            
+            <button onclick="loginUser()">Login</button>
+            <button class="btn-secondary" onclick="registerUser()">Register</button>
+            <button class="btn-secondary" onclick="faceRecognition()">Face Recognition</button>
+            <p id="face-msg" style="margin-top: 10px; text-align: center; color: green;"></p>
+        </div>
+
+        <!-- Microphone Permission Section -->
+        <div id="permission" class="section">
+            <div class="permission-box">
+                <h2>🎤 Microphone Permission</h2>
+                <p>This app offers <strong>Voice-Based Booking Features</strong></p>
+                <p>Would you like to enable voice commands for:</p>
+                <ul style="text-align: left; display: inline-block; margin: 10px 0;">
+                    <li>🔍 Voice Train Search</li>
+                    <li>🗣️ Voice Booking Preferences</li>
+                    <li>🎙️ Voice-Controlled Reservations</li>
+                </ul>
+                <p style="font-size: 14px; color: #666; margin-top: 15px;">
+                    You can also use text-based controls for all features
+                </p>
+                <div class="permission-buttons">
+                    <button class="btn-secondary" onclick="allowMicrophone()">✅ Allow Microphone</button>
+                    <button class="btn-danger" onclick="denyMicrophone()">❌ Deny & Continue</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section">
+            <h1>Welcome, <span id="user-name">User</span>!</h1>
+            <h2>Available Trains</h2>
+            
+            <div id="train-list"></div>
+            
+            <button class="voice-btn" onclick="voiceSearchTrain()">🎤 Voice Search Train</button>
+            <div id="voice-feedback" class="voice-status" style="display: none;"></div>
+            
+            <button class="btn-danger" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Booking Section -->
+        <div id="booking" class="section">
+            <h2>Book Your Ticket</h2>
+            
+            <div id="selected-train" style="background: #e7f3ff; padding: 15px; border-radius: 5px; margin-bottom: 20px;"></div>
+            
+            <div class="form-group">
+                <label for="class">Train Class:</label>
+                <select id="class">
+                    <option value="Sleeper">Sleeper (Basic)</option>
+                    <option value="3A">3A (Standard)</option>
+                    <option value="2A">2A (Premium)</option>
+                    <option value="1A">1A (Luxury)</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="seat-type">Seat Preference:</label>
+                <select id="seat-type">
+                    <option value="Window">Window Seat</option>
+                    <option value="Aisle">Aisle Seat</option>
+                    <option value="Lower">Lower Berth</option>
+                    <option value="Upper">Upper Berth</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="passengers">Number of Passengers:</label>
+                <input type="number" id="passengers" min="1" max="6" value="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age:</label>
+                <input type="number" id="age" min="1" max="120" value="30">
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="special-needs"> Special Needs (Elderly/Disabled)
+                </label>
+            </div>
+            
+            <button class="voice-btn" onclick="voiceBooking()">🎤 Voice Booking</button>
+            <div id="booking-voice-feedback" class="voice-status" style="display: none;"></div>
+            
+            <button onclick="proceedToConfirmation()">Get AI Seat & Prediction</button>
+            <button class="btn-danger" onclick="backToDashboard()">Back to Dashboard</button>
+        </div>
+
+        <!-- Confirmation Section -->
+        <div id="confirmation" class="section">
+            <h2>Booking Confirmation</h2>
+            
+            <div class="ticket-details">
+                <h3>Your Ticket Details</h3>
+                <p><strong>Train:</strong> <span id="conf-train"></span></p>
+                <p><strong>Route:</strong> <span id="conf-route"></span></p>
+                <p><strong>Date:</strong> <span id="conf-date"></span></p>
+                <p><strong>AI Allocated Seat:</strong> <span id="conf-seat" style="color: #667eea; font-weight: bold;"></span></p>
+                <p><strong>Waiting List Prediction:</strong> <span id="conf-prediction" class="status-badge"></span></p>
+            </div>
+            
+            <div id="upgrade-msg"></div>
+            
+            <button onclick="confirmBooking()">Confirm Booking</button>
+            <button class="btn-danger" onclick="backToBooking()">Modify Booking</button>
+        </div>
+
+        <!-- Success Section -->
+        <div id="success" class="section">
+            <div class="alert alert-success">
+                <h2>✅ Booking Confirmed!</h2>
+                <p>Your ticket has been booked successfully.</p>
+            </div>
+            
+            <div class="ticket-details">
+                <p><strong>Booking Reference:</strong> <span id="booking-ref"></span></p>
+                <p><strong>Train:</strong> <span id="success-train"></span></p>
+                <p><strong>Seat:</strong> <span id="success-seat"></span></p>
+                <p><strong>Status:</strong> <span id="success-status" class="status-badge status-confirmed"></span></p>
+            </div>
+            
+            <p style="text-align: center; color: #666; margin-top: 20px;">Check your email for ticket details</p>
+            
+            <button class="btn-secondary" onclick="backToDashboard()">Book Another Ticket</button>
+            <button class="btn-danger" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUser = null;
+        let currentBooking = null;
+        let microphoneAllowed = false;
+        
+        const trains = [
+            { id: 1, name: 'Express 101', from: 'Delhi', to: 'Mumbai', date: '2024-04-20', available: 150 },
+            { id: 2, name: 'Superfast 202', from: 'Delhi', to: 'Chennai', date: '2024-04-20', available: 120 },
+            { id: 3, name: 'Rajdhani 303', from: 'Delhi', to: 'Kolkata', date: '2024-04-20', available: 180 }
+        ];
+        
+        // Show/Hide sections
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+        
+        // Login
+        function loginUser() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                alert('Please enter username and password');
+                return;
+            }
+            
+            currentUser = { username, password };
+            document.getElementById('user-name').textContent = username;
+            showSection('permission');
+        }
+        
+        // Register
+        function registerUser() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (!username || !password) {
+                alert('Please enter username and password');
+                return;
+            }
+            
+            currentUser = { username, password };
+            alert('Account created successfully!');
+            document.getElementById('user-name').textContent = username;
+            showSection('permission');
+        }
+        
+        // Face Recognition
+        function faceRecognition() {
+            const success = Math.random() > 0.3;
+            const faceMsg = document.getElementById('face-msg');
+            
+            if (success) {
+                faceMsg.textContent = '✅ Face verified successfully!';
+                faceMsg.style.color = 'green';
+                setTimeout(() => {
+                    const username = 'Guest User';
+                    currentUser = { username, password: 'face' };
+                    document.getElementById('user-name').textContent = username;
+                    showSection('permission');
+                }, 1000);
+            } else {
+                faceMsg.textContent = '❌ Face recognition failed. Try again.';
+                faceMsg.style.color = 'red';
+            }
+        }
+        
+        // Microphone Permission - Allow
+        function allowMicrophone() {
+            microphoneAllowed = true;
+            loadDashboard();
+            showSection('dashboard');
+        }
+        
+        // Microphone Permission - Deny
+        function denyMicrophone() {
+            microphoneAllowed = false;
+            loadDashboard();
+            showSection('dashboard');
+        }
+        
+        // Load Dashboard
+        function loadDashboard() {
+            const trainList = document.getElementById('train-list');
+            trainList.innerHTML = '';
+            
+            trains.forEach(train => {
+                trainList.innerHTML += `
+                    <div class="train-card">
+                        <div class="train-info">
+                            <strong>${train.name}</strong>
+                            <p>📍 ${train.from} → ${train.to}</p>
+                            <p>📅 ${train.date} | 🎫 ${train.available} seats available</p>
+                        </div>
+                        <button onclick="selectTrain(${train.id})" style="width: 120px; margin: 0;">Book</button>
+                    </div>
+                `;
+            });
+        }
+        
+        // Select Train
+        function selectTrain(trainId) {
+            const train = trains.find(t => t.id === trainId);
+            currentBooking = { train: train };
+            
+            document.getElementById('selected-train').innerHTML = `
+                <strong>${train.name}</strong><br>
+                ${train.from} → ${train.to} | ${train.date}
+            `;
+            
+            showSection('booking');
+        }
+        
+        // AI Seat Allocation
+        function allocateSeat(preferences) {
+            const classes = ['Sleeper', '3A', '2A', '1A'];
+            const seatNumbers = Math.floor(Math.random() * 100) + 1;
+            const seatLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
+            const letter = seatLetters[Math.floor(Math.random() * seatLetters.length)];
+            
+            let seat = preferences.seatType + ' - ' + seatNumbers + letter;
+            
+            if (preferences.specialNeeds) {
+                seat = 'Lower Berth - Ground Floor - ' + seatNumbers + letter;
+            }
+            
+            return seat;
+        }
+        
+        // Waiting List Prediction
+        function predictWaitingList() {
+            const predictions = ['High ✅', 'Medium ⚠️', 'Low 🟡'];
+            return predictions[Math.floor(Math.random() * predictions.length)];
+        }
+        
+        // Auto Upgrade
+        function checkAutoUpgrade(currentClass) {
+            const classes = ['Sleeper', '3A', '2A', '1A'];
+            const currentIndex = classes.indexOf(currentClass);
+            
+            if (currentIndex < classes.length - 1 && Math.random() > 0.5) {
+                return classes[currentIndex + 1];
+            }
+            return null;
+        }
+        
+        // Proceed to Confirmation
+        function proceedToConfirmation() {
+            const preferences = {
+                class: document.getElementById('class').value,
+                seatType: document.getElementById('seat-type').value,
+                passengers: document.getElementById('passengers').value,
+                age: document.getElementById('age').value,
+                specialNeeds: document.getElementById('special-needs').checked
+            };
+            
+            const seat = allocateSeat(preferences);
+            const prediction = predictWaitingList();
+            const upgrade = checkAutoUpgrade(preferences.class);
+            
+            currentBooking.seat = seat;
+            currentBooking.prediction = prediction;
+            currentBooking.upgrade = upgrade;
+            
+            // Display confirmation
+            document.getElementById('conf-train').textContent = currentBooking.train.name;
+            document.getElementById('conf-route').textContent = currentBooking.train.from + ' → ' + currentBooking.train.to;
+            document.getElementById('conf-date').textContent = currentBooking.train.date;
+            document.getElementById('conf-seat').textContent = seat;
+            
+            const predictionBadge = document.getElementById('conf-prediction');
+            predictionBadge.textContent = prediction;
+            predictionBadge.className = 'status-badge status-waiting';
+            
+            const upgradeMsg = document.getElementById('upgrade-msg');
+            if (upgrade) {
+                upgradeMsg.innerHTML = `<div class="alert alert-info">🎉 Auto-Upgrade Available! Your seat can be upgraded to <strong>${upgrade}</strong> class!</div>`;
+            } else {
+                upgradeMsg.innerHTML = '';
+            }
+            
+            showSection('confirmation');
+        }
+        
+        // Confirm Booking
+        function confirmBooking() {
+            const bookingRef = 'RZY' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            document.getElementById('booking-ref').textContent = bookingRef;
+            document.getElementById('success-train').textContent = currentBooking.train.name;
+            document.getElementById('success-seat').textContent = currentBooking.seat;
+            document.getElementById('success-status').textContent = 'CONFIRMED';
+            
+            showSection('success');
+        }
+        
+        // Navigation
+        function backToDashboard() {
+            showSection('dashboard');
+        }
+        
+        function backToBooking() {
+            showSection('booking');
+        }
+        
+        // Logout
+        function logout() {
+            currentUser = null;
+            currentBooking = null;
+            microphoneAllowed = false;
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('face-msg').textContent = '';
+            showSection('login');
+        }
+        
+        // Voice Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+        }
+        
+        // Voice Search Train
+        // Voice Search Train
+        function voiceSearchTrain() {
+            if (!microphoneAllowed) {
+                showVoiceDemoTrain();
+                return;
+            }
+            
+            if (!recognition) {
+                showVoiceDemoTrain();
+                return;
+            }
+            
+            const feedback = document.getElementById('voice-feedback');
+            feedback.style.display = 'block';
+            feedback.className = 'voice-status listening';
+            feedback.textContent = '🎤 Listening for train search...';
+            
+            try {
+                recognition.onstart = function() {
+                    feedback.textContent = '🎤 Listening...';
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    feedback.textContent = `Heard: "${transcript}"`;
+                    
+                    // Search for trains in transcript
+                    let foundTrain = null;
+                    trains.forEach(train => {
+                        if (transcript.includes(train.from.toLowerCase()) && transcript.includes(train.to.toLowerCase())) {
+                            foundTrain = train;
+                        }
+                    });
+                    
+                    if (foundTrain) {
+                        feedback.className = 'voice-status voice-success';
+                        feedback.textContent = `✅ Found: ${foundTrain.name}`;
+                        setTimeout(() => selectTrain(foundTrain.id), 500);
+                    } else {
+                        feedback.className = 'voice-status voice-error';
+                        feedback.textContent = '❌ Could not find train. Try again!';
+                        setTimeout(() => {
+                            feedback.style.display = 'none';
+                        }, 3000);
+                    }
+                };
+                
+                recognition.onerror = function(event) {
+                    feedback.className = 'voice-status voice-error';
+                    feedback.textContent = '❌ Error: ' + event.error + '. Click for Demo!';
+                    feedback.onclick = () => showVoiceDemoTrain();
+                    feedback.style.cursor = 'pointer';
+                };
+                
+                recognition.start();
+            } catch(e) {
+                showVoiceDemoTrain();
+            }
+        }
+        
+        // Voice Search Train Demo Mode
+        function showVoiceDemoTrain() {
+            const feedback = document.getElementById('voice-feedback');
+            feedback.style.display = 'block';
+            feedback.className = 'voice-status';
+            feedback.style.background = '#e3f2fd';
+            feedback.style.color = '#1976d2';
+            
+            const trainOptions = trains.map(t => `<button onclick="selectTrain(${t.id}); document.getElementById('voice-feedback').style.display='none';" style="display: block; width: 100%; margin: 5px 0; padding: 8px; background: #1976d2; color: white; border: none; border-radius: 4px; cursor: pointer;">${t.name} (${t.from} → ${t.to})</button>`).join('');
+            
+            feedback.innerHTML = `<strong>🎤 Demo Mode - Select Train:</strong><br><br>${trainOptions}`;
+        }
+        
+        // Voice Booking (Auto-fill form)
+        function voiceBooking() {
+            if (!microphoneAllowed) {
+                showVoiceDemo();
+                return;
+            }
+            
+            if (!recognition) {
+                showVoiceDemo();
+                return;
+            }
+            
+            const feedback = document.getElementById('booking-voice-feedback');
+            feedback.style.display = 'block';
+            feedback.className = 'voice-status listening';
+            feedback.textContent = '🎤 Listening for booking details...';
+            
+            try {
+                recognition.onstart = function() {
+                    feedback.textContent = '🎤 Say: "2A window seat for 2 passengers"';
+                };
+                
+                recognition.onresult = function(event) {
+                    const transcript = event.results[0][0].transcript.toLowerCase();
+                    feedback.textContent = `Heard: "${transcript}"`;
+                    parseVoicePreferences(transcript);
+                    feedback.className = 'voice-status voice-success';
+                    feedback.textContent = '✅ Preferences updated!';
+                    setTimeout(() => {
+                        feedback.style.display = 'none';
+                    }, 2000);
+                };
+                
+                recognition.onerror = function(event) {
+                    feedback.className = 'voice-status voice-error';
+                    feedback.textContent = '❌ Error: ' + event.error + '. Click for Demo!';
+                    feedback.onclick = () => showVoiceDemo();
+                    feedback.style.cursor = 'pointer';
+                };
+                
+                recognition.start();
+            } catch(e) {
+                showVoiceDemo();
+            }
+        }
+        
+        // Parse voice preferences
+        function parseVoicePreferences(transcript) {
+            // Parse class
+            if (transcript.includes('sleeper') || transcript.includes('sleep')) {
+                document.getElementById('class').value = 'Sleeper';
+            } else if (transcript.includes('3a') || transcript.includes('three a')) {
+                document.getElementById('class').value = '3A';
+            } else if (transcript.includes('2a') || transcript.includes('two a')) {
+                document.getElementById('class').value = '2A';
+            } else if (transcript.includes('1a') || transcript.includes('one a')) {
+                document.getElementById('class').value = '1A';
+            }
+            
+            // Parse seat type
+            if (transcript.includes('window')) {
+                document.getElementById('seat-type').value = 'Window';
+            } else if (transcript.includes('aisle')) {
+                document.getElementById('seat-type').value = 'Aisle';
+            } else if (transcript.includes('lower')) {
+                document.getElementById('seat-type').value = 'Lower';
+            } else if (transcript.includes('upper')) {
+                document.getElementById('seat-type').value = 'Upper';
+            }
+            
+            // Parse number of passengers
+            const numberMatch = transcript.match(/(one|two|three|four|five|six|1|2|3|4|5|6)/);
+            if (numberMatch) {
+                const numMap = { 'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5, 'six': 6 };
+                const num = numMap[numberMatch[0]] || parseInt(numberMatch[0]);
+                if (num >= 1 && num <= 6) {
+                    document.getElementById('passengers').value = num;
+                }
+            }
+            
+            // Parse special needs
+            if (transcript.includes('special') || transcript.includes('elderly') || transcript.includes('disabled')) {
+                document.getElementById('special-needs').checked = true;
+            }
+        }
+        
+        // Voice Demo Mode
+        function showVoiceDemo() {
+            const feedback = document.getElementById('booking-voice-feedback');
+            feedback.style.display = 'block';
+            feedback.className = 'voice-status';
+            feedback.style.background = '#fff3cd';
+            feedback.style.color = '#856404';
+            
+            feedback.innerHTML = `
+                <strong>🎤 Demo Mode - Select Your Preferences:</strong><br><br>
+                <div style="display: grid; gap: 8px;">
+                    <button onclick="document.getElementById('class').value='Sleeper'; updateVoiceDemo();" style="padding: 8px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">Sleeper Class</button>
+                    <button onclick="document.getElementById('class').value='3A'; updateVoiceDemo();" style="padding: 8px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">3A Class</button>
+                    <button onclick="document.getElementById('class').value='2A'; updateVoiceDemo();" style="padding: 8px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">2A Class</button>
+                    <button onclick="document.getElementById('class').value='1A'; updateVoiceDemo();" style="padding: 8px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">1A Class</button>
+                    <button onclick="document.getElementById('seat-type').value='Window'; updateVoiceDemo();" style="padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Window Seat</button>
+                    <button onclick="document.getElementById('seat-type').value='Lower'; updateVoiceDemo();" style="padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">Lower Berth</button>
+                    <button onclick="document.getElementById('passengers').value=2; updateVoiceDemo();" style="padding: 8px; background: #17a2b8; color: white; border: none; border-radius: 4px; cursor: pointer;">2 Passengers</button>
+                    <button onclick="document.getElementById('special-needs').checked=!document.getElementById('special-needs').checked; updateVoiceDemo();" style="padding: 8px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer;">Toggle Special Needs</button>
+                </div>
+            `;
+        }
+        
+        // Update voice demo display
+        function updateVoiceDemo() {
+            const feedback = document.getElementById('booking-voice-feedback');
+            const classVal = document.getElementById('class').value;
+            const seatVal = document.getElementById('seat-type').value;
+            const passengerVal = document.getElementById('passengers').value;
+            
+            feedback.innerHTML = `
+                <strong>✅ Updated Preferences:</strong><br>
+                Class: ${classVal} | Seat: ${seatVal} | Passengers: ${passengerVal}
+            `;
+            
+            setTimeout(() => {
+                feedback.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
